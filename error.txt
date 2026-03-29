@@ -1,0 +1,37 @@
+NetworkSecurity
+Artifacts
+Traceback (most recent call last):
+  File "C:\Users\thesh\OneDrive\Desktop\Network Security System\networksecurity\components\data_ingestion.py", line 61, in split_data_as_train_test
+    train_set, test_set = train_test_split(
+  File "C:\Users\thesh\OneDrive\Desktop\Network Security System\venv\lib\site-packages\sklearn\utils\_param_validation.py", line 218, in wrapper
+    return func(*args, **kwargs)
+  File "C:\Users\thesh\OneDrive\Desktop\Network Security System\venv\lib\site-packages\sklearn\model_selection\_split.py", line 2919, in train_test_split
+    n_train, n_test = _validate_shuffle_split(
+  File "C:\Users\thesh\OneDrive\Desktop\Network Security System\venv\lib\site-packages\sklearn\model_selection\_split.py", line 2499, in _validate_shuffle_split
+    raise ValueError(
+ValueError: With n_samples=0, test_size=0.2 and train_size=None, the resulting train set will be empty. Adjust any of the aforementioned parameters.
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\thesh\OneDrive\Desktop\Network Security System\networksecurity\components\data_ingestion.py", line 90, in initiate_data_ingestion
+    self.split_data_as_train_test(dataframe)
+  File "C:\Users\thesh\OneDrive\Desktop\Network Security System\networksecurity\components\data_ingestion.py", line 84, in split_data_as_train_test
+    raise NetworkSecurityException(e,sys)
+networksecurity.exception.exception.NetworkSecurityException: Error occured in python script name [C:\Users\thesh\OneDrive\Desktop\Network Security System\networksecurity\components\data_ingestion.py] line number [61] error message [With n_samples=0, test_size=0.2 and train_size=None, the resulting train set will be empty. Adjust any of the aforementioned parameters.]
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\thesh\OneDrive\Desktop\Network Security System\main.py", line 14, in <module>
+    dataingestionartifact=data_ingestion.initiate_data_ingestion()
+  File "C:\Users\thesh\OneDrive\Desktop\Network Security System\networksecurity\components\data_ingestion.py", line 92, in initiate_data_ingestion
+    raise NetworkSecurityException(e,sys)
+networksecurity.exception.exception.NetworkSecurityException: Error occured in python script name [C:\Users\thesh\OneDrive\Desktop\Network Security System\networksecurity\components\data_ingestion.py] line number [90] error message [Error occured in python script name [C:\Users\thesh\OneDrive\Desktop\Network Security System\networksecurity\components\data_ingestion.py] line number [61] error message [With n_samples=0, test_size=0.2 and train_size=None, the resulting train set will be empty. Adjust any of the aforementioned parameters.]]
+
+During handling of the above exception, another exception occurred:
+
+Traceback (most recent call last):
+  File "C:\Users\thesh\OneDrive\Desktop\Network Security System\main.py", line 19, in <module>
+    raise NetworkSecurityException(e,sys)
+networksecurity.exception.exception.NetworkSecurityException: Error occured in python script name [C:\Users\thesh\OneDrive\Desktop\Network Security System\main.py] line number [14] error message [Error occured in python script name [C:\Users\thesh\OneDrive\Desktop\Network Security System\networksecurity\components\data_ingestion.py] line number [90] error message [Error occured in python script name [C:\Users\thesh\OneDrive\Desktop\Network Security System\networksecurity\components\data_ingestion.py] line number [61] error message [With n_samples=0, test_size=0.2 and train_size=None, the resulting train set will be empty. Adjust any of the aforementioned parameters.]]]

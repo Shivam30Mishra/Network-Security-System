@@ -16,8 +16,8 @@ import pandas as pd
 import numpy as np
 import pymongo
 
-from networksecuriy.exception.exception import NetworkSecurityException
-from networksecuriy.logging.logger import logging
+from networksecurity.exception.exception import NetworkSecurityException
+from networksecurity.logging.logger import logging
 
 class NetworkDataExtract() :
   def __init__(self):
