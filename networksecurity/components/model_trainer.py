@@ -29,9 +29,15 @@ from urllib.parse import urlparse
 import dagshub
 #dagshub.init(repo_owner='Shivam30Mishra', repo_name='Network-Security-System', mlflow=True)
 
-os.environ["MLFLOW_TRACKING_URI"]="https://dagshub.com/krishnaik06/networksecurity.mlflow"
-os.environ["MLFLOW_TRACKING_USERNAME"]="krishnaik06"
-os.environ["MLFLOW_TRACKING_PASSWORD"]="7104284f1bb44ece21e0e2adb4e36a250ae3251f"
+dagshub.init(
+    repo_owner="theshivammishra10",
+    repo_name="Network-Security-System",
+    mlflow=True
+)
+
+os.environ["MLFLOW_TRACKING_URI"]="https://dagshub.com/theshivammishra10/Network-Security-System"
+os.environ["MLFLOW_TRACKING_USERNAME"]="theshivammishra10"
+os.environ["MLFLOW_TRACKING_PASSWORD"]="7805ee7a8afe8f3b7163ff2e6eec151432fb70244"
 
 
 
