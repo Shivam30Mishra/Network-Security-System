@@ -25,7 +25,7 @@ MODEL_FILE_NAME = "model.pkl"
 """
 Data Ingestion related constant start with DATA_INGESTION VAR NAME
 """
-DATA_INGESTION_COLLECTION_NAME: str = "NetworkData"
+DATA_INGESTION_COLLECTION_NAME: str = "networksecurity"
 DATA_INGESTION_DATABASE_NAME: str = "SHIVAMAI"
 DATA_INGESTION_DIR_NAME: str = "data_ingestion"
 DATA_INGESTION_FEATURE_STORE_DIR: str = "feature_store"
@@ -70,4 +70,4 @@ MODEL_TRAINER_TRAINED_MODEL_NAME: str = "model.pkl"
 MODEL_TRAINER_EXPECTED_SCORE: float = 0.6
 MODEL_TRAINER_OVER_FIITING_UNDER_FITTING_THRESHOLD: float = 0.05
 
-TRAINING_BUCKET_NAME = "netwworksecurity"
+TRAINING_BUCKET_NAME = "shivam-ml-project-bucket"

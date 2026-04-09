@@ -1,7 +1,0 @@
-[ 2026-04-07 23:05:14,525 ] 1025 httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/user "HTTP/1.1 200 OK"
-[ 2026-04-07 23:05:14,528 ] 107 dagshub - INFO - Accessing as theshivammishra10
-[ 2026-04-07 23:05:16,452 ] 1025 httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/repos/theshivammishra10/Network-Security-System "HTTP/1.1 200 OK"
-[ 2026-04-07 23:05:17,347 ] 1025 httpx - INFO - HTTP Request: GET https://dagshub.com/api/v1/user "HTTP/1.1 200 OK"
-[ 2026-04-07 23:05:17,348 ] 107 dagshub - INFO - Initialized MLflow to track repo "theshivammishra10/Network-Security-System"
-[ 2026-04-07 23:05:17,363 ] 107 dagshub - INFO - Repository theshivammishra10/Network-Security-System initialized!
-[ 2026-04-07 23:05:17,363 ] 20 root - INFO - Initiate the data ingestion

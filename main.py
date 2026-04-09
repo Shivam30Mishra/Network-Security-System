@@ -8,7 +8,6 @@ from networksecurity.entity.config_entity import TrainingPipelineConfig
 
 from networksecurity.components.model_trainer import ModelTrainer
 from networksecurity.entity.config_entity import ModelTrainerConfig
- 
 
 import sys
 
