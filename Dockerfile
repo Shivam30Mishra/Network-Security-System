@@ -4,8 +4,11 @@ WORKDIR /app
 
 COPY . /app
 
+# Install system dependencies + awscli
 RUN apt-get update && \
     apt-get install -y awscli && \
-    pip install -r requirements.txt
+    pip install --no-cache-dir -r requirements.txt && \
+    apt-get clean && \
+    rm -rf /var/lib/apt/lists/*
 
 CMD ["python", "app.py"]
