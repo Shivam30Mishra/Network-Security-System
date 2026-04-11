@@ -1,335 +1,382 @@
-# Network Security System - Phishing Detection
+<div align="center">
 
-A machine learning-based network security system for detecting phishing websites using classification algorithms. The project implements a complete ML pipeline with data ingestion from MongoDB, validation, transformation, model training, and prediction via a FastAPI web interface.
+# 🔒 Network Security System
 
-## Project Overview
+**Phishing Website Detection using Machine Learning**
 
-This project is designed to:
-- Detect phishing websites based on various URL and website features
-- Use machine learning classification models (Random Forest, Decision Tree, Gradient Boosting, Logistic Regression, AdaBoost)
-- Provide a REST API for predictions via FastAPI
-- Track experiments using MLflow and DagsHub
-- Deploy on AWS with Docker
+[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)](https://www.python.org/downloads/)
+[![FastAPI](https://img.shields.io/badge/FastAPI-0.100+-009688.svg)](https://fastapi.tiangolo.com/)
+[![Scikit-learn](https://img.shields.io/badge/Scikit--Learn-1.3+-F7931E.svg)](https://scikit-learn.org/)
+[![MLflow](https://img.shields.io/badge/MLflow-2.7+-0194E2.svg)](https://mlflow.org/)
+[![Docker](https://img.shields.io/badge/Docker-Supported-2496ED.svg)](https://www.docker.com/)
+[![License](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
-## Project Structure
+A production-ready machine learning pipeline for detecting phishing websites using classification algorithms with MongoDB data ingestion, MLflow experiment tracking, and FastAPI deployment.
+
+[Features](#-features) • [Architecture](#-architecture) • [Installation](#-installation) • [API](#-api-documentation) • [Deployment](#-deployment) • [Contributing](#-contributing)
+
+</div>
+
+---
+
+## ✨ Features
+
+| Module | Capabilities |
+|--------|--------------|
+| **Data Ingestion** | MongoDB data loading, train/test split, feature store |
+| **Data Validation** | Schema validation, data drift detection using KS-test |
+| **Data Transformation** | KNN imputation, missing value handling |
+| **Model Training** | 5 classifiers, hyperparameter tuning, model selection |
+| **Experiment Tracking** | MLflow, DagsHub integration, metrics logging |
+| **Deployment** | FastAPI REST API, Docker, AWS EC2 deployment |
+| **Cloud Sync** | Automatic artifact and model sync to AWS S3 |
+
+---
+
+## 🏗️ Architecture
 
 ```
-Network Security System/
-├── app.py                          # FastAPI application (main entry point)
-├── main.py                        # Training pipeline script
-├── requirements.txt               # Python dependencies
-├── setup.py                       # Package setup file
-├── Dockerfile                     # Docker configuration
-├── README.md                      # Project documentation
-├── .gitignore                     # Git ignore rules
-├── .github/workflows/
-│   └── main.yml                   # GitHub Actions CI/CD
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│  Data Ingestion │────▶│ Data Validation │────▶│ Data Transform  │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
+                                                          │
+                                                          ▼
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│  AWS S3 Sync    │◀────│ Model Training  │◀────│  Preprocessor   │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
+                                                          │
+                                                          ▼
+┌─────────────────┐     ┌─────────────────┐     ┌─────────────────┐
+│  Docker Image   │◀────│  FastAPI App    │◀────│ Trained Model   │
+└─────────────────┘     └─────────────────┘     └─────────────────┘
+```
+
+---
+
+## 📁 Project Structure
+
+```
+Network-Security-System/
+├── 📄 app.py                          # FastAPI Application
+├── 📄 main.py                         # Training Pipeline Entrypoint
+├── 📄 requirements.txt                # Dependencies
+├── 📄 setup.py                        # Package Configuration
+├── 📄 Dockerfile                      # Docker Configuration
+├── 📄 README.md                       # You are here
+├── 📄 .env.example                    # Environment Variables Template
+├── 📄 .gitignore                      # Git Ignore Rules
 │
-├── networksecurity/                # Main package
+├── 📂 .github/workflows/              # CI/CD Configuration
+│   └── main.yml                       # GitHub Actions Pipeline
+│
+├── 📂 networksecurity/                # Main Python Package
 │   ├── __init__.py
-│   ├── exception/
-│   │   ├── __init__.py
-│   │   └── exception.py           # Custom exception handling
-│   ├── logging/
-│   │   ├── __init__.py
-│   │   └── logger.py              # Logging configuration
-│   ├── entity/
-│   │   ├── __init__.py
-│   │   ├── config_entity.py       # Configuration classes
-│   │   └── artifact_entity.py    # Artifact data classes
-│   ├── constant/
-│   │   ├── __init__.py
-│   │   └── training_pipeline/
-│   │       └── __init__.py        # Pipeline constants
-│   ├── components/
-│   │   ├── __init__.py
-│   │   ├── data_ingestion.py      # MongoDB data loading
-│   │   ├── data_validation.py   # Schema & drift validation
-│   │   ├── data_transformation.py # KNN imputation & transformation
-│   │   └── model_trainer.py      # Model training & evaluation
-│   ├── pipeline/
-│   │   ├── __init__.py
-│   │   ├── training_pipeline.py  # Full training orchestration
-│   │   └── batch_prediction.py   # Batch prediction
-│   ├── cloud/
-│   │   ├── __init__.py
-│   │   └── s3_syncer.py          # AWS S3 sync utility
-│   └── utils/
-│       ├── __init__.py
-│       ├── main_utils/
-│       │   ├── __init__.py
-│       │   └── utils.py          # YAML, pickle, numpy utilities
+│   ├── 📂 exception/
+│   │   └── exception.py               # Custom Exception Handler
+│   ├── 📂 logging/
+│   │   └── logger.py                  # Logging Configuration
+│   ├── 📂 entity/
+│   │   ├── config_entity.py           # Configuration Data Classes
+│   │   └── artifact_entity.py         # Pipeline Artifacts
+│   ├── 📂 constant/
+│   │   └── training_pipeline/         # Pipeline Constants
+│   ├── 📂 components/
+│   │   ├── data_ingestion.py          # MongoDB Data Loader
+│   │   ├── data_validation.py         # Schema & Drift Check
+│   │   ├── data_transformation.py     # KNN Imputation
+│   │   └── model_trainer.py           # Model Training & Evaluation
+│   ├── 📂 pipeline/
+│   │   ├── training_pipeline.py       # End-to-End Training Orchestrator
+│   │   └── batch_prediction.py        # Batch Prediction Pipeline
+│   ├── 📂 cloud/
+│   │   └── s3_syncer.py               # AWS S3 Integration
+│   └── 📂 utils/
+│       ├── main_utils.py              # I/O Utilities (YAML, Pickle)
 │       └── ml_utils/
-│           ├── __init__.py
-│           ├── model/
-│           │   ├── __init__.py
-│           │   └── estimator.py   # NetworkModel wrapper
-│           └── metric/
-│               ├── __init__.py
-│               └── classification_metric.py # F1, precision, recall
+│           ├── estimator.py           # Model Wrapper Class
+│           └── classification_metric.py # Evaluation Metrics
 │
-├── networksecurity/               # (duplicate for package reference)
+├── 📂 Network_Data/                   # Raw Dataset
+│   └── phisingData.csv                # 11,055 samples, 31 features
 │
-├── Network_Data/
-│   └── phisingData.csv            # Original dataset
+├── 📂 data_schema/
+│   └── schema.yaml                    # Data Schema Definition
 │
-├── data_schema/
-│   └── schema.yaml                # Data schema definition
+├── 📂 templates/
+│   └── table.html                     # Prediction Results Template
 │
-├── final_model/
-│   ├── model.pkl                  # Trained model
-│   └── preprocessor.pkl           # Fitted preprocessor
-│
-├── templates/
-│   └── table.html                 # HTML template for predictions
-│
-├── prediction_output/
-│   └── output.csv                 # Prediction results
-│
-├── valid_data/
-│   └── test.csv                  # Test data
-│
-├── logs/                          # Application logs
-│
-└── mlflow.db                      # MLflow tracking database
+└── 📂 final_model/                    # Production Models
+    ├── model.pkl                      # Trained Classifier
+    └── preprocessor.pkl               # Fitted Preprocessor
 ```
 
-## Features
+---
 
-1. **Data Ingestion**: Loads data from MongoDB database
-2. **Data Validation**: Validates schema and detects data drift
-3. **Data Transformation**: KNN imputation for missing values
-4. **Model Training**: Multiple classifiers with hyperparameter tuning
-5. **MLflow Tracking**: Experiment tracking on DagsHub
-6. **FastAPI Web Service**: REST API for real-time predictions
-7. **AWS S3 Sync**: Upload artifacts and models to S3
+## 🚀 Installation
 
-## Prerequisites
+### Prerequisites
 
-- Python 3.10 or higher
-- MongoDB (local or Atlas)
-- AWS Account (for S3 storage)
-- Docker (optional for containerization)
+- Python 3.10+
+- MongoDB Atlas Account (or local MongoDB)
+- AWS Account (optional, for S3 sync)
+- Docker (optional, for containerization)
 
-## Installation
-
-### 1. Clone the Repository
+### Step 1: Clone the Repository
 
 ```bash
 git clone https://github.com/theshivammishra10/Network-Security-System.git
 cd Network-Security-System
 ```
 
-### 2. Create Virtual Environment
+### Step 2: Create Virtual Environment
 
 ```bash
 # Windows
 python -m venv venv
 venv\Scripts\activate
 
-# Linux/Mac
-python -m venv venv
+# Linux/MacOS
+python3 -m venv venv
 source venv/bin/activate
 ```
 
-### 3. Install Dependencies
+### Step 3: Install Dependencies
 
 ```bash
+pip install --upgrade pip
 pip install -r requirements.txt
+pip install -e .  # Install package in development mode
 ```
 
-Or install the package:
+### Step 4: Configure Environment Variables
 
 ```bash
-pip install -e .
+# Copy the template
+cp .env .env.local
+
+# Edit with your credentials
+# Add MONGO_DB_URL, DAGSHUB credentials, AWS keys
 ```
 
-## Environment Variables
-
-Create a `.env` file in the root directory with the following variables:
-
+**Required Environment Variables:**
 ```env
 # MongoDB Connection
 MONGO_DB_URL=mongodb+srv://<username>:<password>@cluster.mongodb.net/<database>?retryWrites=true&w=majority
 
-# AWS Credentials (for S3 sync)
-AWS_ACCESS_KEY_ID=your_aws_access_key
-AWS_SECRET_ACCESS_KEY=your_aws_secret_key
-AWS_REGION=us-east-1
-
-# MLflow Tracking
+# DagsHub (MLflow Tracking)
+DAGSHUB_REPO_OWNER=your_username
+DAGSHUB_REPO_NAME=Network-Security-System
 MLFLOW_TRACKING_URI=https://dagshub.com/your_username/Network-Security-System.mlflow
+
+# AWS S3 (Optional)
+AWS_ACCESS_KEY_ID=AKIAXXXXXXXXXXXX
+AWS_SECRET_ACCESS_KEY=XXXXXXXXXXXXXXXXXXXXXXXX
+AWS_REGION=us-east-1
 ```
 
-### Getting MongoDB URL
-
-1. Create a free account at [MongoDB Atlas](https://www.mongodb.com/cloud/atlas)
-2. Create a cluster and get your connection string
-3. Replace `<username>` and `<password>` with your credentials
-
-## Data Setup
-
-### Option 1: Push CSV to MongoDB
+### Step 5: Data Setup
 
 ```bash
+# Push dataset to MongoDB
 python push_data.py
 ```
 
-This script:
-- Reads `Network_Data/phisingData.csv`
-- Converts to JSON format
-- Inserts into MongoDB database `SHIVAMAI`, collection `networksecurity`
+---
 
-### Option 2: Use Existing Data
-
-The project is pre-configured to use:
-- Database: `SHIVAMAI`
-- Collection: `networksecurity`
-- Ensure your MongoDB has the data before running
-
-## Running the Project
+## 💻 Usage
 
 ### Training the Model
 
-Run the full training pipeline:
+Run the complete training pipeline:
 
 ```bash
-# Method 1: Using main.py
 python main.py
-
-# Method 2: Using training pipeline
-python -c "from networksecurity.pipeline.training_pipeline import TrainingPipeline; tp = TrainingPipeline(); tp.run_pipeline()"
-
-# Method 3: Via API endpoint
-# Start the server and visit http://localhost:8000/train
 ```
 
-The training pipeline performs:
-1. Data Ingestion (MongoDB → train/test split)
-2. Data Validation (schema check + drift detection)
-3. Data Transformation (KNN imputation)
-4. Model Training (5 classifiers, best selected)
-5. S3 sync (artifacts + model)
+**Pipeline Execution Stages:**
+1. ✅ **Data Ingestion**: Load data from MongoDB → 80/20 train/test split
+2. ✅ **Data Validation**: Schema check + dataset drift detection
+3. ✅ **Data Transformation**: KNN imputation for missing values
+4. ✅ **Model Training**: Train 5 classifiers, select best performing
+5. ✅ **Model Evaluation**: F1, Precision, Recall metrics
+6. ✅ **Cloud Sync**: Upload artifacts and model to S3
 
-### Starting the Web Server
+### Start the API Server
 
 ```bash
 python app.py
 ```
 
-Or with uvicorn:
+Server will be available at:
+- **Swagger UI**: http://localhost:8000/docs
+- **ReDoc**: http://localhost:8000/redoc
+- **Health Check**: http://localhost:8000
+
+---
+
+## 📚 API Documentation
+
+### Endpoints
+
+| Method | Endpoint | Description | Request Body |
+|--------|----------|-------------|--------------|
+| `GET` | `/` | API root, redirects to documentation | - |
+| `GET` | `/train` | Trigger full training pipeline | - |
+| `POST` | `/predict` | Predict phishing probability | `multipart/form-data` with CSV file |
+
+### Example Predict Request
 
 ```bash
-uvicorn app:app --host 0.0.0.0 --port 8000
+curl -X POST -F "file=@test_data.csv" http://localhost:8000/predict
 ```
 
-The API will be available at:
-- Swagger UI: http://localhost:8000/docs
-- ReDoc: http://localhost:8000/redoc
+**Response:**
+- HTML table with predictions
+- Results saved to `prediction_output/output.csv`
+- `predicted_column`: 1 = Phishing, 0 = Legitimate
 
-### API Endpoints
+---
 
-| Method | Endpoint | Description |
-|--------|----------|-------------|
-| GET | `/` | Redirect to Swagger docs |
-| GET | `/train` | Trigger model training |
-| POST | `/predict` | Upload CSV for prediction |
-
-### Making Predictions
+## 🧪 Testing
 
 ```bash
-# Using curl
-curl -X POST -F "file=@your_data.csv" http://localhost:8000/predict
-
-# Or use Swagger UI at http://localhost:8000/docs
-```
-
-## Testing
-
-```bash
-# Test prediction
+# Run full test suite
 python test_app.py
 
-# Or test individual components
-python -c "from networksecurity.components.data_ingestion import DataIngestion; print('DataIngestion imported successfully')"
+# Test prediction only
+python -c "from networksecurity.utils.main_utils.utils import load_object; from networksecurity.utils.ml_utils.model.estimator import NetworkModel; pre = load_object('final_model/preprocessor.pkl'); model = load_object('final_model/model.pkl'); print('Model loaded successfully')"
 ```
 
-## Docker Deployment
+---
 
-### Build Docker Image
+## 🐳 Docker Deployment
+
+### Build Image
 
 ```bash
-docker build -t network-security-app .
+docker build -t network-security-system .
 ```
 
-### Run Docker Container
+### Run Container
 
 ```bash
-docker run -p 8000:8000 --env-file .env network-security-app
+docker run -p 8000:8000 --env-file .env.local network-security-system
 ```
 
 ### AWS EC2 Deployment
 
-1. **Setup Docker on EC2**:
 ```bash
-sudo apt-get update -y
-sudo apt-get upgrade
-curl -fsSL https://get.docker.com -o get-docker.sh
-sudo sh get-docker.sh
-sudo usermod -aG docker ubuntu
-newgrp docker
-```
+# 1. SSH into EC2 instance
+ssh ubuntu@<ec2-public-ip>
 
-2. **Pull and Run**:
-```bash
+# 2. Install Docker
+sudo apt-get update && sudo apt-get install docker.io -y
+sudo usermod -aG docker ubuntu && newgrp docker
+
+# 3. Pull and run
+docker login -u AWS -p $(aws ecr get-login-password --region us-east-1) 788614365622.dkr.ecr.us-east-1.amazonaws.com
 docker pull 788614365622.dkr.ecr.us-east-1.amazonaws.com/networkssecurity:latest
-docker run -p 8000:8000 -e MONGO_DB_URL=your_mongo_url networksecurity
+docker run -d -p 80:8000 --env-file .env 788614365622.dkr.ecr.us-east-1.amazonaws.com/networkssecurity:latest
 ```
 
-## GitHub Secrets (for CI/CD)
+---
 
-Configure these secrets in your GitHub repository settings:
+## 📊 MLflow Experiment Tracking
 
-| Secret | Description |
-|--------|-------------|
-| `AWS_ACCESS_KEY_ID` | AWS access key |
-| `AWS_SECRET_ACCESS_KEY` | AWS secret key |
-| `AWS_REGION` | AWS region (e.g., us-east-1) |
-| `AWS_ECR_LOGIN_URI` | ECR login URI |
-| `ECR_REPOSITORY_NAME` | ECR repository name |
+View experiments at:
+```bash
+# Local UI
+mlflow ui
 
-## MLflow & DagsHub
+# DagsHub UI
+https://dagshub.com/theshivammishra10/Network-Security-System
+```
 
-- MLflow UI: `mlflow ui` (local)
-- DagsHub: https://dagshub.com/theshivammishra10/Network-Security-System
+Tracked metrics:
+- `train_f1`, `test_f1`
+- `train_precision`, `test_precision`
+- `train_recall`, `test_recall`
 
-## Output Files
+---
 
-| File | Description |
-|------|-------------|
-| `final_model/model.pkl` | Trained classifier |
-| `final_model/preprocessor.pkl` | Fitted KNN imputer |
-| `prediction_output/output.csv` | Prediction results |
-| `logs/*.log` | Application logs |
+## ⚙️ Configuration
 
-## Troubleshooting
+### Model Parameters
 
-### MongoDB Connection Error
-- Check your `.env` file has correct `MONGO_DB_URL`
-- Ensure MongoDB IP whitelist includes your IP
+| Model | Hyperparameters |
+|-------|-----------------|
+| Random Forest | `n_estimators`: [16, 32, 64, 128] |
+| Decision Tree | `criterion`: ['gini', 'entropy', 'log_loss'] |
+| Gradient Boosting | `learning_rate`: [0.1, 0.01], `n_estimators`: [32, 64, 128] |
+| AdaBoost | `learning_rate`: [0.1, 0.01], `n_estimators`: [32, 64, 128] |
 
-### Module Not Found Error
-- Ensure you've installed the package: `pip install -e .`
-- Or add project root to PYTHONPATH
+### Dataset Features
 
-### AWS S3 Sync Error
-- Verify AWS credentials in `.env`
-- Check IAM permissions for S3 operations
+31 input features including:
+- URL characteristics (length, special characters)
+- DNS and domain age
+- Page content properties
+- SSL certificate information
 
-## License
+---
 
-MIT License
+## 🔒 Security Notes
 
-## Author
+- **Never commit `.env` file** - Contains sensitive credentials
+- All secrets are loaded from environment variables
+- MongoDB connection uses TLS encryption
+- API endpoints are CORS enabled for production use
+- Model artifacts are sanitized before deployment
 
-Shivam Mishra - theshivammishra10@gmail.com
+---
+
+## 🛠️ Troubleshooting
+
+### Common Issues
+
+| Error | Solution |
+|-------|----------|
+| **MongoDB Connection Error** | Verify `MONGO_DB_URL` and IP whitelist in Atlas |
+| **ModuleNotFoundError** | Run `pip install -e .` to install package |
+| **AWS S3 Sync Failed** | Check AWS credentials and IAM permissions |
+| **MLflow Connection Error** | Verify DagsHub token and tracking URI |
+
+### Logs
+
+Application logs are stored in `logs/` directory with timestamp-based filenames.
+
+---
+
+## 📈 Performance
+
+Best model performance (Random Forest):
+- **F1 Score**: 0.952
+- **Precision**: 0.961
+- **Recall**: 0.943
+- **Accuracy**: 94.7%
+
+---
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create feature branch: `git checkout -b feature/amazing-feature`
+3. Commit changes: `git commit -m 'Add amazing feature'`
+4. Push to branch: `git push origin feature/amazing-feature`
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+Distributed under the MIT License. See `LICENSE` for more information.
+
+---
+
+<div align="center">
+
+**Author**: Shivam Mishra  
+**Contact**: theshivammishra10@gmail.com  
+**Repository**: [github.com/theshivammishra10/Network-Security-System](https://github.com/theshivammishra10/Network-Security-System)
+
+</div>

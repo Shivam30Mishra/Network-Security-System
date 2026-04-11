@@ -22,17 +22,22 @@ from sklearn.ensemble import (
 
 import mlflow
 import dagshub
+from dotenv import load_dotenv
 
+# Load environment variables
+load_dotenv()
 
-# ✅ Initialize DagsHub
+# ✅ Initialize DagsHub from environment variables
 dagshub.init(
-    repo_owner="theshivammishra10",
-    repo_name="Network-Security-System",
+    repo_owner=os.getenv("DAGSHUB_REPO_OWNER", "theshivammishra10"),
+    repo_name=os.getenv("DAGSHUB_REPO_NAME", "Network-Security-System"),
     mlflow=True
 )
 
-# ✅ Use env variable (REMOVE password from code in real projects)
-os.environ["MLFLOW_TRACKING_URI"] = "https://dagshub.com/theshivammishra10/Network-Security-System.mlflow"
+# ✅ Use env variable for MLflow tracking
+MLFLOW_TRACKING_URI = os.getenv("MLFLOW_TRACKING_URI")
+if MLFLOW_TRACKING_URI:
+    os.environ["MLFLOW_TRACKING_URI"] = MLFLOW_TRACKING_URI
 
 
 class ModelTrainer:

@@ -1,2 +1,28 @@
-venv
+# Virtual Environment
+venv/
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment Variables
 .env
+
+# Artifacts & Models
+Artifacts/
+saved_models/
+final_model/
+prediction_output/
+logs/
+
+# Database
+mlflow.db
+*.db
+
+# IDE
+.vscode/
+.idea/
+*.swp
+
+# OS
+.DS_Store
+Thumbs.db
