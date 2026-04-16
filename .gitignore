@@ -18,6 +18,9 @@ logs/
 mlflow.db
 *.db
 
+# Runtime Logs
+error.log
+
 # IDE
 .vscode/
 .idea/
